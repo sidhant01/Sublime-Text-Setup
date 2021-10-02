@@ -1,0 +1,76 @@
+<snippet>
+	<content><![CDATA[
+// minimum(l, r) gives min element in the range l and r-1 inclusive (0<=l<r<=n)
+// maximum(l, r) gives max element in the range l and r-1 inclusive (0<=l<r<=n)
+struct segment_tree {
+
+	int size;
+	vector<int> mins, maxs;
+
+	void init(int n) {
+		size = 1;
+		while (size < n)
+			size <<= 1;
+		mins.assign(2 * size, 1e18);
+		maxs.assign(2 * size, -1e18);
+	}
+
+	void set(int i, int v, int x, int lx, int rx) {
+		if (rx - lx == 1) {
+			mins[x] = v;
+			maxs[x] = v;
+			return;
+		}
+		int m = (lx + rx) / 2;
+		if (i < m) {
+			set(i, v, 2 * x + 1, lx, m);
+		}
+		else {
+			set(i, v, 2 * x + 2, m, rx);
+		}
+		mins[x] = min(mins[2 * x + 1], mins[2 * x + 2]);
+		maxs[x] = max(maxs[2 * x + 1], maxs[2 * x + 2]);
+	}
+
+	void set(int i, int v) {
+		set(i, v, 0, 0, size);
+	}
+
+	int minimum(int l, int r, int x, int lx, int rx) {
+		if (lx >= r || l >= rx)
+			return INT_MAX;
+		if (lx >= l && rx <= r) {
+			return mins[x];
+		}
+		int m = (lx + rx) / 2;
+		int min_l = minimum(l, r, 2 * x + 1, lx, m);
+		int min_r = minimum(l, r, 2 * x + 2, m, rx);
+		return min(min_l, min_r);
+	}
+	
+	int maximum(int l, int r, int x, int lx, int rx) {
+		if (lx >= r || l >= rx)
+			return INT_MIN;
+		if (lx >= l && rx <= r) {
+			return maxs[x];
+		}
+		int m = (lx + rx) / 2;
+		int max_l = maximum(l, r, 2 * x + 1, lx, m);
+		int max_r = maximum(l, r, 2 * x + 2, m, rx);
+		return max(max_l, max_r);
+	}
+
+	int minimum(int l, int r) {
+		return minimum(l, r, 0, 0, size);
+	}
+
+	int maximum(int l, int r) {
+		return maximum(l, r, 0, 0, size);
+	}
+};
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>segtree_min_max_class</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

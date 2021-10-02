@@ -1,0 +1,18 @@
+<snippet>
+	<content><![CDATA[
+int nCr(int n, int r, int m = 1e9 + 7) {
+	int f1 = 1, f2 = 1, f3 = 1;
+	for (int i = 1; i <= n; i++)
+		f1 = (f1 * i) % m;
+	for (int i = 1; i <= r; i++)
+		f2 = (f2 * i) % m;
+	for (int i = 1; i <= n - r; i++)
+		f3 = (f3 * i) % m;
+	return (f1 * modInverse((f2 * f3) % m, m)) % m;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>ncr_snip</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>
